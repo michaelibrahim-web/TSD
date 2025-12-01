@@ -1,0 +1,85 @@
+# =========================
+# Build / bin / obj folders
+# =========================
+**/bin/
+**/obj/
+
+# =========================
+# Visual Studio / Rider / IDE
+# =========================
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# =========================
+# .NET / NuGet
+# =========================
+*.nupkg
+*.snupkg
+*.nuspec
+*.cache
+*.log
+*.vspscc
+*.pdb
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# =========================
+# EF Core Migrations / Database
+# =========================
+**/Migrations/
+# Optional: include or ignore migrations in source control
+# If you want to track migrations, remove the above line
+*.db
+*.mdf
+*.ldf
+*.sqlite
+*.sql
+
+# =========================
+# User-specific files
+# =========================
+*.userprefs
+*.local
+*.env
+
+# =========================
+# OS Generated Files
+# =========================
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.DS_Store
+
+# =========================
+# Dotnet Tool / global.json
+# =========================
+.tools/
+global.json
+
+# =========================
+# Test / coverage
+# =========================
+*.coverage
+*.coveragexml
+TestResults/
+*.trx
+*.vsmdi
+*.hive
+
+# =========================
+# Publish / Deployment
+# =========================
+publish/
+*.publishsettings
+*.deployproj
+*.azurePubxml
+
+# =========================
+# Logs
+# ===
