@@ -21,8 +21,9 @@ namespace TSD.Api
             builder.Services.AddOpenApi();
 
 
-            builder.Services.AddDbContext<TSD_DbContext>(options =>
-             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            //builder.Services.AddDbContext<TSD_DbContext>(options =>
+            // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+           
             builder.Services.AddDataInfrastructure("DefaultConnection");
             var app = builder.Build();
 

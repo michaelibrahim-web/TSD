@@ -24,7 +24,7 @@ namespace TSD.Data.Extension
             {
                 // 1. Configure EF Core DbContext (using SQL Server in this example)
                 services.AddDbContext<TSD_DbContext>(options =>
-                    options.UseSqlServer(connectionString)
+                    options.UseSqlServer("Server=NGR-LPC-11698\\SQLEXPRESS;Database=tsd;Integrated Security=True;TrustServerCertificate=True;")
                 );
 
                 // 2. Register Generic Repository Implementation

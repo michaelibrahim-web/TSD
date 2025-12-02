@@ -18,9 +18,6 @@ namespace TSD.Services.Mapping
 
             CreateMap<Employee, EmployeeResponse>();
 
-
-
-           
             CreateMap<CreateProjectRequest, Project>()
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.Archive, opt => opt.Ignore())
@@ -32,10 +29,6 @@ namespace TSD.Services.Mapping
                 .ForMember(dest => dest.LeadFullName, opt => opt.MapFrom(src => src.Lead != null ? src.Lead.FullName : "Unassigned"))
                 .ForMember(dest => dest.IsArchived, opt => opt.MapFrom(src => src.Archive))
                 .ForMember(dest => dest.TeamMemberCount, opt => opt.MapFrom(src => src.TeamMembers != null ? src.TeamMembers.Count : 0));
-
-
-
-            
             CreateMap<CreatTimeEntryRequest, TimeEntry>();
 
             CreateMap<TimeEntry, TimeEntryResponse>()
@@ -45,9 +38,6 @@ namespace TSD.Services.Mapping
                 .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(src => src.Project != null ? src.Project.ProjectName : "Unknown"))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.CategoryName : "Unknown"));
 
-
-
-           
             CreateMap<CreateClientRequest, Client>()
                 .ForMember(dest => dest.Projects, opt => opt.Ignore());
 
@@ -56,18 +46,11 @@ namespace TSD.Services.Mapping
                 .ForMember(dest => dest.Projects, opt => opt.Ignore());
 
             CreateMap<Client, ClientResponse>();
-
-
-
-            
             CreateMap<CreateCategoryRequest, Category>()
                 .ForMember(dest => dest.TimeEntries, opt => opt.Ignore());
 
             CreateMap<Category, CategoryResponse>();
 
-
-
-            
             CreateMap<AddTeamMemberRequest, TeamMember>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.FullName, opt => opt.Ignore())

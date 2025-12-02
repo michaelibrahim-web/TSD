@@ -13,6 +13,7 @@ namespace TSD.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public int CategoryId { get; set; }
         public DateTime EntryDate { get; set; }
+
         public decimal Hours { get; set; }
         public decimal OverTime { get; set; }
 
