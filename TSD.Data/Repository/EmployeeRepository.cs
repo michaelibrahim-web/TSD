@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TSD.Domain.Entities;
-using TSD.Domain.Enums;
+using TSD.Contract.Enums;
 using TSD.Domain.Interfaces.Repository;
 
 namespace TSD.Data.Repository

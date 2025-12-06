@@ -9,6 +9,7 @@ namespace TSD.Contract.Request
 {
     public class CreateCategoryRequest
     {
+        public int Id { get; set; }
         [Required]
         public string CategoryName { get; set; } = string.Empty;
     }

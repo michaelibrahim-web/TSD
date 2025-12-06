@@ -1,26 +1,34 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TSD.Contract.Request;
+using TSD.Contract.Response;
 using TSD.Domain.Entities;
-using TSD.Domain.Enums;
+using TSD.Contract.Enums;
 using TSD.Domain.Exceptions;
 using TSD.Domain.Interfaces.Repository;
 using TSD.Domain.Interfaces.Services;
+using TSD.Services.Mapping;
 
 namespace TSD.Services.Services
 {
+    
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        private readonly IMapper _mapper;
+        private readonly IPasswordService _passwordService;
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IPasswordService passwordService)
         {
             _employeeRepository = employeeRepository;
+            _mapper = mapper;
+            _passwordService = passwordService;
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int id)
+        public async Task<EmployeeResponse> GetEmployeeByIdAsync(int id)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
 
@@ -30,39 +38,46 @@ namespace TSD.Services.Services
                 throw new EntityNotFoundException(nameof(Employee), id);
             }
 
-            return employee;
+            return _mapper.Map<EmployeeResponse>(employee);
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<EmployeeResponse>> GetAllEmployeesAsync()
         {
-            return await _employeeRepository.GetAllAsync();
+            var results = await _employeeRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<EmployeeResponse>>(results);
         }
 
-        public async Task<IEnumerable<Employee>> GetEmployeesByRoleAsync(EmployeeRole role)
+        public async Task<IEnumerable<EmployeeResponse>> GetEmployeesByRoleAsync(EmployeeRole role)
         {
-            return await _employeeRepository.GetEmployeesByRoleAsync(role);
+            var employeeRole=await _employeeRepository.GetEmployeesByRoleAsync(role);
+            return _mapper.Map<IEnumerable<EmployeeResponse>>(employeeRole);
         }
 
-        public async Task<Employee> CreateEmployeeAsync(Employee newEmployee)
+        public async Task<EmployeeResponse> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
             // Business Rule: Ensure username is unique before saving
-            var existingEmployee = await _employeeRepository.GetByUserNameAsync(newEmployee.UserName);
+            var existingEmployee = await _employeeRepository.GetByUserNameAsync(request.UserName);
             if (existingEmployee != null)
             {
-                throw new InvalidOperationException($"Username '{newEmployee.UserName}' is already taken.");
+                throw new InvalidOperationException($"Username '{request.UserName}' is already taken.");
             }
 
             // NOTE: Password hashing logic (e.g., using BCrypt) would be implemented here before saving.
             // For now, we set the initial status
-            newEmployee.Status = EmployeeStatus.Active;
+      
+            var newEmployee = _mapper.Map<Employee>(request);
+            var hashedPassword = _passwordService.HashPassword(newEmployee.Password);
+            newEmployee.Password = hashedPassword;
+            newEmployee.Status = EmployeeStatus.Active; // Default status
+            
 
             await _employeeRepository.AddAsync(newEmployee);
             await _employeeRepository.SaveChangesAsync(); // Final database commit
 
-            return newEmployee;
+            return _mapper.Map<EmployeeResponse>(newEmployee);
         }
 
-        public async Task UpdateEmployeeAsync(Employee updatedEmployee)
+        public async Task UpdateEmployeeAsync(UpdateEmployeeRequest updatedEmployee)
         {
             var existing = await GetEmployeeByIdAsync(updatedEmployee.Id); // Uses the validation logic
 
@@ -80,38 +95,59 @@ namespace TSD.Services.Services
             // Update mutable properties
             existing.FullName = updatedEmployee.FullName;
             existing.Email = updatedEmployee.Email;
-            existing.Role = updatedEmployee.Role;
+            existing.Role =updatedEmployee.Role;
             existing.HoursPerWeek = updatedEmployee.HoursPerWeek;
 
-            _employeeRepository.Update(existing);
+            _employeeRepository.Update(_mapper.Map<Employee>(existing));
             await _employeeRepository.SaveChangesAsync();
         }
 
         public async Task DeleteEmployeeAsync(int id)
         {
-            var employeeToDelete = await GetEmployeeByIdAsync(id);
+            // Load the entity directly from EF (tracked instance)
+            var employee = await _employeeRepository.GetByIdAsync(id);
 
-            // NOTE: Add logic here to check if the employee has any unarchived projects led 
-            // or unapproved time entries before deleting.
+            if (employee == null)
+                throw new Exception("Employee not found");
 
-            _employeeRepository.Delete(employeeToDelete);
+            // Add any domain rules here (if needed)
+            // Example:
+            // if (employee.HasUnapprovedTimeEntries)
+            //     throw new Exception("Cannot delete employee with unapproved entries.");
+
+            _employeeRepository.Delete(employee);  // ✔ delete tracked entity
             await _employeeRepository.SaveChangesAsync();
         }
+
 
         public async Task ChangeEmployeeStatusAsync(int id, EmployeeStatus newStatus)
         {
-            var employee = await GetEmployeeByIdAsync(id);
+            var employee = await _employeeRepository.GetByIdAsync(id); // tracked entity
 
-            // Business Rule: Cannot set status to active if the hours per week is zero
-            if (newStatus == EmployeeStatus.Active && employee.HoursPerWeek == 0)
-            {
-                throw new InvalidOperationException("Cannot set employee to Active status when HoursPerWeek is 0.");
-            }
+            if (employee == null)
+                throw new EntityNotFoundException($"Employee with Id {id} was not found.");
 
+           
+
+            // Update directly
             employee.Status = newStatus;
 
-            _employeeRepository.Update(employee);
+            _employeeRepository.Update(employee);   // tracked entity
             await _employeeRepository.SaveChangesAsync();
         }
+        //login 
+        public async Task<EmployeeResponse> LoginAsync(EmployeeLoginRequest request)
+        {
+            var employee = await _employeeRepository.GetByUserNameAsync(request.username);
+            if (employee == null) throw new Exception("Invalid username or password.");
+
+            // Verify password
+            bool isValid = _passwordService.VerifyPassword(request.password, employee.Password);
+            if (!isValid) throw new Exception("Invalid username or password.");
+
+            return _mapper.Map<EmployeeResponse>(employee);
+        }
+
+
     }
 }

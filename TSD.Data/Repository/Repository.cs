@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TSD.Domain.Interfaces.Repository;
-using global::TSD.Data;
+using TSD.Data;
 using Microsoft.EntityFrameworkCore;
-namespace TSD.Domain.Entities;
+using TSD.Domain.Entities;
+
+namespace TSD.Data.Repository;
 
 
 

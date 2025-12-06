@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 namespace TSD.Contract.Request
 {
     public class UpdateClientRequest
+
     {
+        public int Id { get; set; }
         [Required]
         public string ClientName { get; set; } = string.Empty;
 

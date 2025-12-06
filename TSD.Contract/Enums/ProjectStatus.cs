@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TSD.Domain.Enums
+namespace TSD.Contract.Enums
 {
-    public enum EmployeeStatus
+    public enum ProjectStatus
     {
         Active = 0,
-        Inactive = 1,
-        OnLeave = 2
-       
+        OnHold = 1,
+        Completed = 2,
+        Archived = 3
+        
     }
 }

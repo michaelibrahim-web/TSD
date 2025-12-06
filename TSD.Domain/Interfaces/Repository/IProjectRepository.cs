@@ -13,6 +13,6 @@ namespace TSD.Domain.Interfaces.Repository
         Task<IEnumerable<Project>> GetProjectsByClientAsync(int clientId);
         Task<IEnumerable<Project>> GetProjectsByLeadAsync(int leadId);
         Task<bool> IsProjectNameUniqueAsync(string projectName, int? projectId = null);
-        Task UpdateProjectAsync(Project project);
+        Task<Project> AddProjectAsync(Project project);
     }
 }

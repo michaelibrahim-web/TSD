@@ -11,8 +11,10 @@ namespace TSD.Data.Repository
 {
     public class ProjectRepository : GenericRepository<Project>, IProjectRepository
     {
+        private readonly TSD_DbContext _context;
         public ProjectRepository(TSD_DbContext context) : base(context)
         {
+            _context = context;
         }
 
         public async Task<IEnumerable<Project>> GetProjectsByClientAsync(int clientId)
@@ -36,9 +38,11 @@ namespace TSD.Data.Repository
                 (!projectId.HasValue || p.Id != projectId.Value));
         }
 
-        public Task UpdateProjectAsync(Project project)
+        public async Task<Project> AddProjectAsync(Project project)
         {
-            throw new NotImplementedException();
+            await _context.Projects.AddAsync(project);
+            await _context.SaveChangesAsync();
+            return project; // now project.Id is populated
         }
     }
 }

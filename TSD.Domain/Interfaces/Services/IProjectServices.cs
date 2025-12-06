@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TSD.Domain.Entities;
+using TSD.Contract.Response;
+using TSD.Contract.Request;
 
 namespace TSD.Domain.Interfaces.Services
 {
     public interface IProjectService
     {
-        Task<Project> GetProjectByIdAsync(int id);
-        Task<IEnumerable<Project>> GetAllProjectsAsync();
-        Task<IEnumerable<Project>> GetProjectsByClientAsync(int clientId);
-        Task<Project> CreateProjectAsync(Project newProject);
-        Task UpdateProjectAsync(Project updatedProject);
-        Task ArchiveProjectAsync(int id);
+        Task<ProjectResponse> GetProjectByIdAsync(int id);
+        Task<IEnumerable<ProjectResponse>> GetAllProjectsAsync();
+        Task<IEnumerable<ProjectResponse>> GetProjectsByClientAsync(int clientId);
+        Task<ProjectResponse> CreateProjectAsync(CreateProjectRequest newProject);
+        
+
     }
 }

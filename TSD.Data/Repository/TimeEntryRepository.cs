@@ -28,7 +28,11 @@ namespace TSD.Data.Repository
         {
             return await IncludeTimeEntryDetails(_dbSet).FirstOrDefaultAsync(t => t.Id == id);
         }
-
+        public IQueryable<TimeEntry> Query()
+        {
+            // Returns an IQueryable for further filtering
+            return _context.TimeEntries.AsNoTracking(); // AsNoTracking is optional for read-only queries
+        }
         public async Task<IEnumerable<TimeEntry>> GetTimeEntriesForEmployeeAsync(int employeeId, DateTime? startDate, DateTime? endDate)
         {
             var query = IncludeTimeEntryDetails(_dbSet)

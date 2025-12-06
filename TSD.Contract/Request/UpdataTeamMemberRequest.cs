@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TSD.Domain.Enums;
+using TSD.Contract.Enums;
 
 namespace TSD.Contract.Request
 {
     public class UpdateTeamMemberRequest
     {
+        public int Id { get; set; }
         [Required]
         public EmployeeRole Role { get; set; }
 

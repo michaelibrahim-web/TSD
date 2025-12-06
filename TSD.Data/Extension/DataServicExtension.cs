@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TSD.Data.Repository;
-using TSD.Domain.Entities;
 using TSD.Domain.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace TSD.Data.Extension
 {
@@ -20,11 +20,13 @@ namespace TSD.Data.Extension
         public static class DataServiceExtensions
         {
             // This is the single method the API layer will call to set up data persistence
-            public static IServiceCollection AddDataInfrastructure(this IServiceCollection services, string connectionString)
+            public static IServiceCollection AddDataInfrastructure(this IServiceCollection services,ConfigurationManager  config)
             {
                 // 1. Configure EF Core DbContext (using SQL Server in this example)
                 services.AddDbContext<TSD_DbContext>(options =>
-                    options.UseSqlServer("Server=NGR-LPC-11698\\SQLEXPRESS;Database=tsd;Integrated Security=True;TrustServerCertificate=True;")
+                    options.UseSqlServer(config.GetConnectionString("DefaultConnection"))
+
+                    //TODO: REsearch on cqrs
                 );
 
                 // 2. Register Generic Repository Implementation

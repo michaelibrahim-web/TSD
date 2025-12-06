@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TSD.Contract.Response;
 using TSD.Domain.Entities;
-using TSD.Domain.Enums;
+using TSD.Contract.Enums;
+using TSD.Contract.Request;
 
 namespace TSD.Domain.Interfaces.Services
 {
     public interface IEmployeeService
     {
-        Task<Employee> GetEmployeeByIdAsync(int id);
-        Task<IEnumerable<Employee>> GetAllEmployeesAsync();
-        Task<IEnumerable<Employee>> GetEmployeesByRoleAsync(EmployeeRole role);
-        Task<Employee> CreateEmployeeAsync(Employee newEmployee);
-        Task UpdateEmployeeAsync(Employee updatedEmployee);
+        Task<EmployeeResponse> GetEmployeeByIdAsync(int id);
+        Task<IEnumerable<EmployeeResponse>> GetAllEmployeesAsync();
+        Task<IEnumerable<EmployeeResponse>> GetEmployeesByRoleAsync(EmployeeRole role);
+        Task<EmployeeResponse> CreateEmployeeAsync(CreateEmployeeRequest newEmployee);
+        Task UpdateEmployeeAsync(UpdateEmployeeRequest updatedEmployee);
         Task DeleteEmployeeAsync(int id);
         Task ChangeEmployeeStatusAsync(int id, EmployeeStatus newStatus);
+        Task<EmployeeResponse> LoginAsync(EmployeeLoginRequest request);
     }
 }

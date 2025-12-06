@@ -7,6 +7,9 @@ using TSD.Domain.Entities;
 using TSD.Domain.Exceptions;
 using TSD.Domain.Interfaces.Repository;
 using TSD.Domain.Interfaces.Services;
+using TSD.Contract.Response;
+using TSD.Contract.Request;
+using AutoMapper;
 
 namespace TSD.Services.Services
 {
@@ -15,38 +18,40 @@ namespace TSD.Services.Services
         private readonly ITimeEntryRepository _timeEntryRepository;
         private readonly IProjectRepository _projectRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IMapper _mapper;
 
         public TimeEntryService(
             ITimeEntryRepository timeEntryRepository,
             IProjectRepository projectRepository,
-            IEmployeeRepository employeeRepository)
+            IEmployeeRepository employeeRepository, IMapper mapper)
         {
             _timeEntryRepository = timeEntryRepository;
             _projectRepository = projectRepository;
             _employeeRepository = employeeRepository;
+            _mapper = mapper;
         }
 
-        public async Task<TimeEntry> GetTimeEntryByIdAsync(int id)
+        public async Task<TimeEntryResponse> GetTimeEntryByIdAsync(int id)
         {
             var timeEntry = await _timeEntryRepository.GetByIdAsync(id);
 
             if (timeEntry == null)
                 throw new EntityNotFoundException($"Time entry with ID {id} not found.");
 
-            return timeEntry;
+            return _mapper.Map<TimeEntryResponse>( timeEntry);
         }
 
-        public async Task<IEnumerable<TimeEntry>> GetTimeEntriesForEmployeeAsync(int userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<TimeEntryResponse>> GetTimeEntriesForEmployeeAsync(int userId, DateTime? startDate, DateTime? endDate)
         {
-            return await _timeEntryRepository.GetTimeEntriesForEmployeeAsync(userId, startDate, endDate);
+            return _mapper.Map < IEnumerable < TimeEntryResponse >> (await _timeEntryRepository.GetTimeEntriesForEmployeeAsync(userId, startDate, endDate));
         }
 
-        public async Task<IEnumerable<TimeEntry>> GetTimeEntriesForProjectAsync(int projectId)
+        public async Task<IEnumerable<TimeEntryResponse>> GetTimeEntriesForProjectAsync(int projectId)
         {
-            return await _timeEntryRepository.GetTimeEntriesForProjectAsync(projectId);
+            return _mapper.Map<IEnumerable<TimeEntryResponse>>(await _timeEntryRepository.GetTimeEntriesForProjectAsync(projectId));
         }
 
-        public async Task<TimeEntry> LogTimeAsync(TimeEntry timeEntry)
+        public async Task<TimeEntryResponse> LogTimeAsync(CreatTimeEntryRequest timeEntry)
         {
             // Validate employee exists
             var employee = await _employeeRepository.GetByIdAsync(timeEntry.EmployeeId);
@@ -65,19 +70,19 @@ namespace TSD.Services.Services
             // Additional rule: Validate time duration
             if (timeEntry.Hours < 0 || timeEntry.OverTime < 0)
                 throw new EntityNotFoundException("Logged time cannot contain negative values.");
-
-            await _timeEntryRepository.AddAsync(timeEntry);
-            return timeEntry;
+            var newEntry = _mapper.Map<TimeEntry>(timeEntry);
+            await _timeEntryRepository.AddAsync(newEntry);
+            return _mapper.Map<TimeEntryResponse>(timeEntry);
         }
 
-        public async Task UpdateTimeEntryAsync(TimeEntry timeEntry)
+        public async Task UpdateTimeEntryAsync(CreatTimeEntryRequest timeEntry)
         {
             var existing = await _timeEntryRepository.GetByIdAsync(timeEntry.Id);
 
             if (existing == null)
                 throw new EntityNotFoundException($"Time entry with ID {timeEntry.Id} not found.");
 
-            await _timeEntryRepository.UpdateTimeEntryAsync(timeEntry);
+            await _timeEntryRepository.UpdateTimeEntryAsync(_mapper.Map<TimeEntry>(timeEntry));
         }
 
         public async Task DeleteTimeEntryAsync(int id)
@@ -90,9 +95,7 @@ namespace TSD.Services.Services
             await _timeEntryRepository.UpdateTimeEntryAsync(existing);
         }
 
-        public Task<IEnumerable<TimeEntry>> GetTimeEntriesForUserAsync(int userId, DateTime? startDate, DateTime? endDate)
-        {
-            throw new NotImplementedException();
-        }
+       
+
     }
 }

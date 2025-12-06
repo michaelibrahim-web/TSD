@@ -9,7 +9,8 @@ namespace TSD.Domain.Interfaces.Repository
 {
     public interface ITimeEntryRepository : IGenericRepository<TimeEntry>
     {
-        
+        IQueryable<TimeEntry> Query();
+
         Task<IEnumerable<TimeEntry>> GetTimeEntriesForEmployeeAsync(int userId, DateTime? startDate, DateTime? endDate);
 
         

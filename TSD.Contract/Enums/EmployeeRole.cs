@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TSD.Domain.Enums
+namespace TSD.Contract.Enums
 {
     public enum EmployeeRole
     {

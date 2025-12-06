@@ -20,6 +20,9 @@ namespace TSD.Services.Extension
             services.AddScoped<ITeamMemberService, TeamMemberService>();
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IPasswordService, PasswordService>();
+
+
 
             // ✅ Correct AutoMapper registration
             // Scan the assembly where MappingProfile is located

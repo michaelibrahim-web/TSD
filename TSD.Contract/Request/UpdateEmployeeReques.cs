@@ -8,7 +8,7 @@ using TSD.Contract.Enums;
 
 namespace TSD.Contract.Request
 {
-    public class CreateEmployeeRequest
+    public class UpdateEmployeeRequest
     {
         [Required]
         public string FullName { get; set; } = string.Empty;
@@ -25,9 +25,9 @@ namespace TSD.Contract.Request
 
         [Required]
         public EmployeeRole Role { get; set; }
-
-        
+        public EmployeeStatus? Status { get; set; }
 
         public int HoursPerWeek { get; set; } = 40;
+        public int Id { get; set; }
     }
 }

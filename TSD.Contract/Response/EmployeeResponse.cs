@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TSD.Domain.Enums;
+using TSD.Contract.Enums;
 
 namespace TSD.Contract.Response
 {

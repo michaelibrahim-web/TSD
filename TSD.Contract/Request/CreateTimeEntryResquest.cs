@@ -9,8 +9,10 @@ namespace TSD.Contract.Request
 {
     public class CreatTimeEntryRequest
     {
+        public int Id { get; set; }
         [Required]
         public int UserId { get; set; }
+        public int EmployeeId { get; set; }
 
         [Required]
         public int ProjectId { get; set; }
