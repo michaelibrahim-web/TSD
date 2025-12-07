@@ -67,8 +67,21 @@ namespace TSD.Api.Controllers
             }
         }
 
-        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateProjectRequest request)
+        {
+            var updated = await _projectService.UpdateAsync(id, request);
+            return Ok(updated);
+        }
 
-        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _projectService.DeleteAsync(id);
+            if (!deleted) return NotFound("Project not found");
+            return Ok("Project deleted successfully");
+        }
+
+
     }
 }

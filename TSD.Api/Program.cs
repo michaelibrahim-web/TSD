@@ -10,6 +10,8 @@ using TSD.Data.Extension.SolutionName.Data.Extensions;
 using TSD.Services.Extension;
 using TSD.Services.JsonWebToken;
 using TSD.Services.Mapping;
+using TSD.Services.Services;
+using TSD.Domain.Interfaces.Services;
 namespace TSD.Api
 {
     public class Program
@@ -42,6 +44,8 @@ namespace TSD.Api
             });
                 builder.Services.AddAuthorization();
                  builder.Services.AddScoped<JwtTokenService>();
+            builder.Services.AddScoped<ITokenValidator, TokenValidator>();
+
 
             // Add services to the container.
 

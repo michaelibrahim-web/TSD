@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Security.Claims;
+using TSD.Contract.Request;
 
 
 namespace TSD.Services.JsonWebToken
@@ -22,15 +22,15 @@ namespace TSD.Services.JsonWebToken
             _config = config;
         }
 
-        public string GenerateToken(int userId, string username, string role)
+        public string GenerateToken(JwtRequest request)
         {
             var jwtSettings = _config.GetSection("Jwt");
 
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, username),
-            new Claim(ClaimTypes.Role, role)
+            new Claim(JwtRegisteredClaimNames.Sub, request.userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.UniqueName, request.username),
+            
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));

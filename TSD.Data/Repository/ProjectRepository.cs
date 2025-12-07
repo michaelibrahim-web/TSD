@@ -44,5 +44,21 @@ namespace TSD.Data.Repository
             await _context.SaveChangesAsync();
             return project; // now project.Id is populated
         }
+        public async Task<Project> UpdateAsync(Project project)
+        {
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
+            return project;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null) return false;
+
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

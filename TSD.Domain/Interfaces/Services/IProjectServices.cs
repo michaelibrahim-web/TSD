@@ -15,7 +15,9 @@ namespace TSD.Domain.Interfaces.Services
         Task<IEnumerable<ProjectResponse>> GetAllProjectsAsync();
         Task<IEnumerable<ProjectResponse>> GetProjectsByClientAsync(int clientId);
         Task<ProjectResponse> CreateProjectAsync(CreateProjectRequest newProject);
-        
+        Task<ProjectResponse> UpdateAsync(int id, UpdateProjectRequest request);
+        Task<bool> DeleteAsync(int id);
+
 
     }
 }

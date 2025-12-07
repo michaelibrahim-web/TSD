@@ -56,9 +56,24 @@ namespace TSD.Services.Services
 
             return _mapper.Map<ProjectResponse>(result);
         }
+        public async Task<ProjectResponse> UpdateAsync(int id, UpdateProjectRequest request)
+        {
+            var existing = await _projectRepository.GetByIdAsync(id);
+            if (existing == null) throw new Exception("Project not found");
 
-        
+            _mapper.Map(request, existing);
 
-      
+            await _projectRepository.UpdateAsync(existing);
+            return _mapper.Map<ProjectResponse>(existing);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _projectRepository.DeleteAsync(id);
+        }
+
+
+
+
     }
 }
